@@ -1,15 +1,15 @@
 
-function mark(boardSquare) {
-    return function(playerSel) {
-        playerSel = document.createTextNode(playerChoice);
-        boardSquare.appendChild(playerSel)
-        return boardSquare
-    }
-}
+// const mark = function(boardSquare) {
+//     console.log('mark')
+//     return function(playerChoice) {
+//         playerSel = document.createTextNode(playerChoice);
+//         boardSquare.appendChild(playerSel)
+//         return boardSquare
+//     }
+// }
+
 
 const generateBoard = () => {
-    let squares = new Array(9);
-    console.log(squares)
     const gbGrid = document.getElementById('gbContainer');
     const boardSquare = document.createElement('div');
 
@@ -17,38 +17,53 @@ const generateBoard = () => {
 
     for (let i = 0; i < 9; i++) {
         let squareCopy = boardSquare.cloneNode();
-
         squareCopy.id = `boardSquare-${i}`
-        squareCopy.addEventListener('click', () => { mark() });
+        squareCopy.addEventListener('click', () => console.log(gameBoard.gbState[i].getState()));
         gbGrid.appendChild(squareCopy);
-        squares[i] = squareCopy;
         }
-    return squares;
 }
 
-const gameBoard = (() => {
+const setBoard = (board) => {
+    board.forEach((x) => console.log(x))
 
-    const markBoard = (board) => {
-        
+    function clickX(x) {
+        x.innerText = `${x}`
     }
-    //init virtual board
-    let board = generateBoard();
-    //an array for storing marks
-    console.log(board.squares)
+
+    board.forEach((x) => { 
+        x.addEventListener('click', (e) => clickX(e.target) )})
+} 
+const gameBoard = (() => {
+    //an array of boardSquare objs
+    let gbState = new Array(9).fill({
+        _innerState: null,
+
+        setState: function(state) {
+            this._innerState = state;
+        },
+
+        getState: function() {
+            return this._innerState;
+        }
+    });
+
+    // console.log(gbState[0].getState())
+    generateBoard();
+    return { gbState }
 })();
 
 const user = (icon) => {
     let playerMark = icon;
-    const select = () => {
+    const selectSquare = () => {
 
     }
 };
 
 console.log(user.icon);
-// const btn = document.getElementById('addBtn')
+const btn = document.getElementById('addBtn')
 
-// btn.addEventListener('click', () => addBox());
+btn.addEventListener('click', () => addBox());
 
-// function addBox() {
-//     console.log('tick')
-// }
+function addBox() {
+    gameBoard.gbState.forEach((x) => console.log(x));
+}

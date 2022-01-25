@@ -52,10 +52,12 @@ const gameBoard = (() => {
     return { gbState }
 })();
 
-const user = (icon) => {
-    let playerMark = icon;
-    const selectSquare = () => {
+const User = (icon) => {
+    let playerIcon = icon;
 
+    const getIcon = () => playerIcon;
+    const getSquare = gameBoard.gbState.getState();
+    if (!getSquare) {
     }
 };
 

@@ -1,17 +1,4 @@
-const _localFuncs = (() => {
-    let numOfPlayers;
-    const setPlayers = (() => {
-        const numPlayersField = document.querySelector('#numPlayers');
-        numPlayersField.addEventListener('change', (event) => {
-            btn.addEventListener('click', () => gameBoard.manageTurns(event.target.value));
-            // console.log('do')
 
-        })
-        numOfPlayers = numPlayersField.value;
-    })();
-
-    return { numOfPlayers, setPlayers }
-})();
 
 const playerController = (() => {
     const playerClick = (square) => {
@@ -29,35 +16,35 @@ const gameBoard = (() => {
     const virtualBoard = new Array(9);
 
     const _init = (() => {
-        htmlBoard.forEach((ele, idx) => {
-            ele.addEventListener('click', playerController.playerClick.bind(ele, idx));
-        })
 
         virtualBoard.fill({
-            clicked: null
+            clicked: null,
         });
+
     })();
+
+    const setField = (idx) => {
+        this.clicked = true;
+    }
+
+    htmlBoard.forEach((ele, idx) => {
+        ele.addEventListener('click', playerController.playerClick.bind(ele, idx));
+        ele.addEventListener('click', gameBoard.setField.bind(ele,idx))
+    });
+    
     console.log(virtualBoard);
 
-    const manageTurns = (numOfPlayers) => {
-        //num of players is an array
-        let _turn = 1;
-        let _player = 1;
-
-        _player = numOfPlayers[(_turn / numOfPlayers)]
-
-        return _player
-    }
-
     return {
-        manageTurns
+        virtualBoard,
+        setField
     }
+
 })();
 
 const btn = document.getElementById('addBtn')
 
-// btn.addEventListener('click', () => addBox());
+btn.addEventListener('click', () => addBox());
 
 function addBox() {
-    gameBoard.gbState.forEach((x) => console.log(x));
+    gameBoard.htmlBoard.forEach((x) => console.log(x));
 }

@@ -19,10 +19,15 @@ const displayController = (() => {
         boardSquareChild.id = "boardSquare";
 
         boardSqArray = Array(9).fill(boardSquareChild, 0, 9)
-        console.log(boardSqArray)
-        boardContainer.append(...boardSqArray)
+        console.log(boardSquareChild instanceof Element)
+        for (i = 0; i < boardSqArray.length; i++) {
+            let clone = boardSqArray[i].cloneNode();
+            boardContainer.append(clone)
+        }
+        // boardContainer.append([...boardSqArray])
         // console.log(boardContainer instanceof Element)
         console.log(boardContainer.childNodes)
+        console.log(boardContainer)
     }
     drawBoard();
     const htmlBoard = Array.from(document.querySelector('#gbContainer').children);

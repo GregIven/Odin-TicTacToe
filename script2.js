@@ -1,7 +1,19 @@
 const playerController = (() => {
+    const playerSwitch = () => {
+        let _boolean = gameBoardData.exNotOh;
+        _boolean = !_boolean;
+
+        if(_boolean) {
+            return 'X';
+        } else {
+            return 'O';
+        }
+        
+    }
+
     const playerClick = (square) => {
         gameBoardData.virtualBoard[square].clicked = true;
-        gameBoardData.playerSwitch();
+        virtualBoard.setSquare(playerSwitch());
         console.log(gameBoardData.virtualBoard[square])    
     }
 
@@ -12,61 +24,62 @@ const playerController = (() => {
 })();
 
 const displayController = (() => {
+    const gbReference = document.querySelector('#gbContainer');
+    //TODO find a way to make gbReference copy to mutate instead of the original. When
+    //TODO clicking drawBoard() it appends to the original gbReference.
     const drawBoard = () => {
-        const boardContainer = document.querySelector('#gbContainer');
         const boardSquareChild = document.createElement('div');
         boardSquareChild.className = "board-square";
         boardSquareChild.id = "boardSquare";
 
         boardSqArray = Array(9).fill(boardSquareChild, 0, 9)
-        console.log(boardSquareChild instanceof Element)
+
         for (i = 0; i < boardSqArray.length; i++) {
             let clone = boardSqArray[i].cloneNode();
-            boardContainer.append(clone)
+            gbReference.append(clone)
         }
-        // boardContainer.append([...boardSqArray])
-        // console.log(boardContainer instanceof Element)
-        console.log(boardContainer.childNodes)
-        console.log(boardContainer)
     }
-    drawBoard();
-    const htmlBoard = Array.from(document.querySelector('#gbContainer').children);
+
+    const htmlBoard = Array.from(gbReference.children);
 
     htmlBoard.forEach((ele, idx) => {
         ele.addEventListener('click', playerController.playerClick.bind(ele, idx));
     });
 
     return {
-        htmlBoard
+        htmlBoard,
+        drawBoard
     }
 })();
 
 const gameBoardData = (() => {
-
+    //TODO find out how setSquare can be used by playController to set result of 
+    //TODO playerSwitch(), also test playerSwitch() to get it to return either 'X' or 'O'
     const virtualBoard = new Array(9).fill({}).map((ele) => {
             const clicked = null;
+            const setSquare = function(symbol) {
+                this.clicked = symbol;
+            }
             return { clicked: clicked }
         });
 
     let exNotOh = true;
-    const playerSwitch = () => {
-        exNotOh = !exNotOh;
-        console.log(exNotOh);
-    }
 
     return {
         virtualBoard,
-        playerSwitch
+        exNotOh
     }
 
 })();
 
+displayController.drawBoard();
+
 console.log(gameBoardData.virtualBoard);
 
-const btn = document.getElementById('addBtn')
+const btn = document.getElementById('addBtn');
 
 btn.addEventListener('click', () => addBox());
 
 function addBox() {
-    console.log(gameBoardData.virtualBoard);
+    console.log(gameBoardData.exNotOh);
 }

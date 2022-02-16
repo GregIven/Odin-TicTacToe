@@ -33,7 +33,7 @@ const displayController = (() => {
             boardSquareChild.className = "board-square";
             return boardSquareChild;
           }
-          const cells = Array.from({ length: 9 }, makeCell);
+          const cells = Array(9).fill(0).map(makeCell);
           gbReference.append(...cells);
     }
 
@@ -52,7 +52,7 @@ const displayController = (() => {
 const gameBoardData = (() => {
     //TODO find out how setSquare can be used by playController to set result of 
     //TODO playerSwitch(), also test playerSwitch() to get it to return either 'X' or 'O'
-    const virtualBoard = new Array(9).fill(0).map((ele) => {
+    const virtualBoard = new Array(9).fill({}).map((ele) => {
             const clicked = null;
             const setSquare = function(symbol) {
                 this.clicked = symbol;
@@ -75,7 +75,7 @@ console.log(gameBoardData.virtualBoard);
 
 const btn = document.getElementById('addBtn');
 
-btn.addEventListener('click', () => testFunc());
+btn.addEventListener('click', () => addBox());
 
 function addBox() {
     console.log(gameBoardData.exNotOh);

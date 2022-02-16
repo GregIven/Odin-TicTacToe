@@ -24,14 +24,20 @@ const displayController = (() => {
 })();
 
 const gameBoardData = (() => {
-
     const virtualBoard = new Array(9).fill({}).map((ele) => {
             const clicked = null;
             return { clicked: clicked }
-        })
+        });
+    
+    let boolean = true;
+    
+    const playerSwitch = (bool) => {
+        return bool = !bool
+    }
 
     return {
         virtualBoard,
+        playerSwitch
     }
 
 })();
@@ -40,8 +46,8 @@ console.log(gameBoardData.virtualBoard);
 
 const btn = document.getElementById('addBtn')
 
-btn.addEventListener('click', () => addBox());
+btn.addEventListener('click', () => testFunc());
 
-function addBox() {
-    console.log(gameBoardData.virtualBoard);
+function testFunc() {
+    console.log(gameBoardData.playerSwitch());
 }

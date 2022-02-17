@@ -1,43 +1,64 @@
 const playerController = (() => {
-    const playerSwitch = () => {
-        let _boolean = gameBoardData.exNotOh;
-        _boolean = !_boolean;
-
-        if(_boolean) {
+    const playerSwitch = () => { 
+        if(gameBoardData.exNotOh) {
+            gameBoardData.exNotOh = !gameBoardData.exNotOh;
             return 'X';
         } else {
+            gameBoardData.exNotOh = !gameBoardData.exNotOh;
             return 'O';
         }
         
     }
 
     const playerClick = (square) => {
-        gameBoardData.virtualBoard[square].clicked = true;
-        virtualBoard.setSquare(playerSwitch());
+        gameBoardData.virtualBoard[square].click = true;
+        gameBoardData.virtualBoard[square].setSquare(playerSwitch());
+        displayController.redraw();
         console.log(gameBoardData.virtualBoard[square])    
     }
 
     return { 
-        playerClick
+        playerClick,
+        playerSwitch
     }
 
 })();
 
 const displayController = (() => {
     const gbReference = document.querySelector('#gbContainer');
-    //TODO find a way to make gbReference copy to mutate instead of the original. When
-    //TODO clicking drawBoard() it appends to the original gbReference.
-    const drawBoard = () => {
-        const makeCell = () => {
+    
+    let htmlBoard;
+
+    const drawBoard = (() => {
+        const buildSq = () => {
             const boardSquareChild = document.createElement('div');
             boardSquareChild.className = "board-square";
-            return boardSquareChild;
-          }
-          const cells = Array(9).fill(0).map(makeCell);
-          gbReference.append(...cells);
+            boardSquareChild.id = "boardSquare";
+            return boardSquareChild
+        }
+        
+        let boardSqArray = Array.from( {length: 9}, buildSq);
+        gbReference.append(...boardSqArray)
+        htmlBoard = Array.from(gbReference.children);
+        console.log(htmlBoard[0] instanceof Element)
+        return {
+            gbReference, htmlBoard
+            }
+    })();
+
+    const redraw = () => {
+        console.log('yoo')
+        htmlBoard.forEach((ele, idx) => {
+            if (gameBoardData.virtualBoard[idx].click === true) {
+                console.log(ele)
+                ele.innerHtml = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>`
+                ele.removeEventListener('click', playerController.playerClick.bind(ele, idx));
+            }
+        })
+        return htmlBoard
     }
 
-    const htmlBoard = Array.from(gbReference.children);
+    console.log(htmlBoard);
 
     htmlBoard.forEach((ele, idx) => {
         ele.addEventListener('click', playerController.playerClick.bind(ele, idx));
@@ -45,20 +66,29 @@ const displayController = (() => {
 
     return {
         htmlBoard,
-        drawBoard
+        drawBoard,
+        redraw
     }
 })();
 
 const gameBoardData = (() => {
-    //TODO find out how setSquare can be used by playController to set result of 
-    //TODO playerSwitch(), also test playerSwitch() to get it to return either 'X' or 'O'
-    const virtualBoard = new Array(9).fill({}).map((ele) => {
-            const clicked = null;
-            const setSquare = function(symbol) {
-                this.clicked = symbol;
-            }
-            return { clicked: clicked }
-        });
+
+    const virtualObjInit = () => {
+        return {
+        click: null,
+        symbol: null,
+        setSquare: function(symbol) {
+            this.symbol = symbol;
+            },
+        getSquare: function() {
+            return this.symbol
+        }
+        }
+    }
+
+    const virtualBoard = Array.from( {length: 9}, virtualObjInit);
+
+    console.log(virtualBoard);
 
     let exNotOh = true;
 
@@ -69,14 +99,11 @@ const gameBoardData = (() => {
 
 })();
 
-displayController.drawBoard();
-
-console.log(gameBoardData.virtualBoard);
-
 const btn = document.getElementById('addBtn');
 
 btn.addEventListener('click', () => addBox());
 
 function addBox() {
-    console.log(gameBoardData.exNotOh);
+    playerController.playerSwitch();
+    console.log(gameBoardData.virtualBoard)
 }

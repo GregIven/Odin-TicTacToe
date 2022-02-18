@@ -40,28 +40,30 @@ const displayController = (() => {
         let boardSqArray = Array.from( {length: 9}, buildSq);
         gbReference.append(...boardSqArray)
         htmlBoard = Array.from(gbReference.children);
-        console.log(htmlBoard[0] instanceof Element)
         return {
             gbReference, htmlBoard
             }
     })();
 
     const redraw = () => {
-        console.log('yoo')
         htmlBoard.forEach((ele, idx) => {
             if (gameBoardData.virtualBoard[idx].click === true) {
-                console.log(ele)
-                ele.innerHtml = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>`
-                ele.removeEventListener('click', playerController.playerClick.bind(ele, idx));
+                ele.innerHTML = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>`
+                ele.removeEventListener('click', playerClickBoard[idx]);
             }
         })
-        return htmlBoard
     }
-
-    console.log(htmlBoard);
+    
+    let playerClick = (ele, idx) => {
+        return playerController.playerClick.bind(ele, idx);
+    };
+    
+    let playerClickBoard = htmlBoard.map((ele, idx) => {
+        return playerClick(ele, idx);
+    });
 
     htmlBoard.forEach((ele, idx) => {
-        ele.addEventListener('click', playerController.playerClick.bind(ele, idx));
+        ele.addEventListener('click', playerClickBoard[idx]);
     });
 
     return {

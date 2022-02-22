@@ -57,7 +57,7 @@ const displayController = (() => {
     let playerClick = (ele, idx) => {
         return playerController.playerClick.bind(ele, idx);
     };
-    
+
     let playerClickBoard = htmlBoard.map((ele, idx) => {
         return playerClick(ele, idx);
     });
@@ -88,6 +88,41 @@ const gameBoardData = (() => {
         }
     }
 
+    const calcWinner = (() => {
+        const winCol = (boardObj) => {
+            const indexes = [[0,1,2], [3,4,5], [6,7,8]];
+            // let result = indexes.filter((ele) => {
+            //     for (const [k, v] of Object.entries(boardObj)) {
+            //         // console.log(v)
+            //         if (ele.includes(Number(k))) {
+            //             console.log('k')
+            //             return v
+            //         }
+            //     }
+                
+            // })
+            // console.log(result)
+            indexes.forEach((ele) => {
+                let boardCheck = [];
+                for (const [k, v] of Object.entries(boardObj)) {
+                    
+                }
+            })
+        }
+
+        const winRow = (boardObj) => {
+            const indexes = [[0,3,6], [1,4,7], [2,5,8]];
+        }
+
+        const winDiag = (boardObj) => {
+            const indexes = [[0,4,8], [2,4,6]];
+        }
+
+        return {
+            winCol
+        }
+    })();
+
     const virtualBoard = Array.from( {length: 9}, virtualObjInit);
 
     console.log(virtualBoard);
@@ -96,16 +131,18 @@ const gameBoardData = (() => {
 
     return {
         virtualBoard,
-        exNotOh
+        exNotOh,
+        calcWinner
     }
 
 })();
+
+console.log(gameBoardData.virtualBoard)
 
 const btn = document.getElementById('addBtn');
 
 btn.addEventListener('click', () => addBox());
 
 function addBox() {
-    playerController.playerSwitch();
-    console.log(gameBoardData.virtualBoard)
+    gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
 }

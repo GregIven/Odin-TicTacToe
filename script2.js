@@ -89,25 +89,32 @@ const gameBoardData = (() => {
     }
 
     const calcWinner = (() => {
+        const returnWinningSymbol = (boardVector) => {
+            if (boardVector.length === 3) {
+                return boardVector[0]
+            }
+        }
+
+        const calcWinner = (board, combos) => {
+            combos.forEach((ele) => {
+                let boardCheck = [];
+                let winningSymbol = null;
+                for (const [k, v] of Object.entries(board)) {
+                    if (ele.includes(Number(k))) {
+                        if (v.click === true) {
+                            boardCheck.push(v.symbol)
+                        }
+                    }
+                }
+                if (returnWinningSymbol(boardCheck)) {
+                    return winningSymbol = returnWinningSymbol(boardCheck)
+                }
+            })    
+        }
         const winCol = (boardObj) => {
             const indexes = [[0,1,2], [3,4,5], [6,7,8]];
-            // let result = indexes.filter((ele) => {
-            //     for (const [k, v] of Object.entries(boardObj)) {
-            //         // console.log(v)
-            //         if (ele.includes(Number(k))) {
-            //             console.log('k')
-            //             return v
-            //         }
-            //     }
-                
-            // })
-            // console.log(result)
-            indexes.forEach((ele) => {
-                let boardCheck = [];
-                for (const [k, v] of Object.entries(boardObj)) {
-                    
-                }
-            })
+            let winner = calcWinner(boardObj, indexes)
+            return winner
         }
 
         const winRow = (boardObj) => {
@@ -125,7 +132,6 @@ const gameBoardData = (() => {
 
     const virtualBoard = Array.from( {length: 9}, virtualObjInit);
 
-    console.log(virtualBoard);
 
     let exNotOh = true;
 
@@ -137,12 +143,12 @@ const gameBoardData = (() => {
 
 })();
 
-console.log(gameBoardData.virtualBoard)
 
 const btn = document.getElementById('addBtn');
 
 btn.addEventListener('click', () => addBox());
 
 function addBox() {
+    console.log(gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard))
     gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
 }

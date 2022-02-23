@@ -14,7 +14,6 @@ const playerController = (() => {
         gameBoardData.virtualBoard[square].click = true;
         gameBoardData.virtualBoard[square].setSquare(playerSwitch());
         displayController.redraw();
-        console.log(gameBoardData.virtualBoard[square])    
     }
 
     return { 
@@ -96,9 +95,9 @@ const gameBoardData = (() => {
         }
 
         const calcWinner = (board, combos) => {
+            let winningSymbol = null;
             combos.forEach((ele) => {
                 let boardCheck = [];
-                let winningSymbol = null;
                 for (const [k, v] of Object.entries(board)) {
                     if (ele.includes(Number(k))) {
                         if (v.click === true) {
@@ -107,9 +106,11 @@ const gameBoardData = (() => {
                     }
                 }
                 if (returnWinningSymbol(boardCheck)) {
-                    return winningSymbol = returnWinningSymbol(boardCheck)
+                    winningSymbol = returnWinningSymbol(boardCheck)
+                    console.log(winningSymbol)
                 }
-            })    
+            })
+            return winningSymbol
         }
         const winCol = (boardObj) => {
             const indexes = [[0,1,2], [3,4,5], [6,7,8]];
@@ -119,14 +120,20 @@ const gameBoardData = (() => {
 
         const winRow = (boardObj) => {
             const indexes = [[0,3,6], [1,4,7], [2,5,8]];
+            let winner = calcWinner(boardObj, indexes)
+            return winner
         }
 
         const winDiag = (boardObj) => {
             const indexes = [[0,4,8], [2,4,6]];
+            let winner = calcWinner(boardObj, indexes)
+            return winner
         }
 
         return {
-            winCol
+            winCol,
+            winRow,
+            winDiag
         }
     })();
 
@@ -151,4 +158,8 @@ btn.addEventListener('click', () => addBox());
 function addBox() {
     console.log(gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard))
     gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
+    console.log(gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard))
+    gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard)
+    console.log(gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard))
+    gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard)
 }

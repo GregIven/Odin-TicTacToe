@@ -49,6 +49,11 @@ const displayController = (() => {
             if (gameBoardData.virtualBoard[idx].click === true) {
                 ele.innerHTML = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>`
                 ele.removeEventListener('click', playerClickBoard[idx]);
+
+                gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
+                gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard)
+                gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard)
+
             }
         })
     }
@@ -107,7 +112,6 @@ const gameBoardData = (() => {
                 }
                 if (returnWinningSymbol(boardCheck)) {
                     winningSymbol = returnWinningSymbol(boardCheck)
-                    console.log(winningSymbol)
                 }
             })
             return winningSymbol

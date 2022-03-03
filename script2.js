@@ -9,7 +9,7 @@ const playerController = (() => {
         }
         
     }
-
+    //the square is passed in as an index in a virtual array
     const playerClick = (square) => {
         gameBoardData.virtualBoard[square].click = true;
         gameBoardData.virtualBoard[square].setSquare(playerSwitch());
@@ -27,6 +27,8 @@ const displayController = (() => {
     const gbReference = document.querySelector('#gbContainer');
     
     let htmlBoard;
+
+    let endGame = false;
 
     const drawBoard = (() => {
         const buildSq = () => {
@@ -47,33 +49,46 @@ const displayController = (() => {
     const redraw = () => {
         htmlBoard.forEach((ele, idx) => {
             if (gameBoardData.virtualBoard[idx].click === true) {
-                ele.innerHTML = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>`
+                ele.innerHTML = `<p1>${gameBoardData.virtualBoard[idx].symbol}</p1>` 
                 ele.removeEventListener('click', playerClickBoard[idx]);
 
-                gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
-                gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard)
+                if (
+                gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard) ||
+                gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard) ||
                 gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard)
+                ) {
+                    console.log('totes')
+                }
 
             }
         })
     }
     
+    //returns bound function to apply, each instance of playerClick returns the ele(tile) and its index specific to each instance
     let playerClick = (ele, idx) => {
         return playerController.playerClick.bind(ele, idx);
     };
 
+    //need to map each bound player click to a map tile. Each one should be a unique function instead of copy.
+    //Before I was using Array.of to bind the same function to each tile on the board
     let playerClickBoard = htmlBoard.map((ele, idx) => {
         return playerClick(ele, idx);
     });
 
+    //add event listeners to each tile, calls the player click that is mapped to each tile with the index passed in
     htmlBoard.forEach((ele, idx) => {
         ele.addEventListener('click', playerClickBoard[idx]);
     });
 
+    let removeListener = () => {
+
+    }
+
     return {
         htmlBoard,
         drawBoard,
-        redraw
+        redraw,
+        endGame
     }
 })();
 
@@ -99,7 +114,7 @@ const gameBoardData = (() => {
             }
         }
 
-        const calcWinner = (board, combos) => {
+        const _calcWinner = (board, combos) => {
             let winningSymbol = null;
             combos.forEach((ele) => {
                 let boardCheck = [];
@@ -118,19 +133,19 @@ const gameBoardData = (() => {
         }
         const winCol = (boardObj) => {
             const indexes = [[0,1,2], [3,4,5], [6,7,8]];
-            let winner = calcWinner(boardObj, indexes)
+            let winner = _calcWinner(boardObj, indexes)
             return winner
         }
 
         const winRow = (boardObj) => {
             const indexes = [[0,3,6], [1,4,7], [2,5,8]];
-            let winner = calcWinner(boardObj, indexes)
+            let winner = _calcWinner(boardObj, indexes)
             return winner
         }
 
         const winDiag = (boardObj) => {
             const indexes = [[0,4,8], [2,4,6]];
-            let winner = calcWinner(boardObj, indexes)
+            let winner = _calcWinner(boardObj, indexes)
             return winner
         }
 
@@ -154,16 +169,17 @@ const gameBoardData = (() => {
 
 })();
 
+console.log(null)
 
 const btn = document.getElementById('addBtn');
 
 btn.addEventListener('click', () => addBox());
 
 function addBox() {
-    console.log(gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard))
+    // console.log(gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard))
     gameBoardData.calcWinner.winCol(gameBoardData.virtualBoard)
-    console.log(gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard))
+    // console.log(gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard))
     gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard)
-    console.log(gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard))
+    // console.log(gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard))
     gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard)
 }

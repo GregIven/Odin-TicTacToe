@@ -57,7 +57,9 @@ const displayController = (() => {
                 gameBoardData.calcWinner.winRow(gameBoardData.virtualBoard) ||
                 gameBoardData.calcWinner.winDiag(gameBoardData.virtualBoard)
                 ) {
-                    console.log('totes')
+                    htmlBoard.forEach((ele, idx) => {
+                        ele.removeEventListener('click', playerClickBoard[idx]);
+                    }) 
                 }
 
             }
@@ -109,7 +111,9 @@ const gameBoardData = (() => {
 
     const calcWinner = (() => {
         const returnWinningSymbol = (boardVector) => {
-            if (boardVector.length === 3) {
+            if (boardVector.length === 3 && 
+                boardVector[0] === boardVector[1] &&
+                boardVector[1] === boardVector[2]) {
                 return boardVector[0]
             }
         }
